@@ -1,0 +1,5 @@
+<aura:event type="APPLICATION" description="This event is fired to unsubscribe from Messenger PE" >
+    
+    <!-- Boolean here represents true => On ,  false => off -->
+    <aura:attribute name="messengerSwitch" type="Boolean"/>
+</aura:event>

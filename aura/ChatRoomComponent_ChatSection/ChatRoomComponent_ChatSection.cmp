@@ -1,0 +1,102 @@
+<aura:component 
+                controller="ChatRoomController" 
+                implements="force:hasRecordId,force:hasSObjectName,flexipage:availableForRecordHome,flexipage:availableForAllPageTypes"
+                extensible="true">
+    <!-- EMP API  -->
+    <lightning:empApi aura:id="empApi_Messenger" />
+    <!-- Holds the streaming event subscription -->
+    <aura:attribute name="subscription" type="Map" />
+    
+    <!-- Component Events -->
+    <aura:handler  event="c:UnsubscribeMessengerEvent" action="{!c.unsubscribe}"/>
+    <aura:handler  event="c:UserLoggedInEvent" action="{!c.changeNameEnableMessageInput}"/>
+    
+    
+    <aura:attribute name="username" type="String" default="Waiting for the username ..... "/>
+    <aura:attribute name="userEmail" type="String"  default="Waiting for the Email..... " />
+    
+    <aura:attribute name="sendername" type="String"  />
+    <aura:attribute name="senderemail" type="String"   />
+    
+    <aura:attribute name="message" type="String" />
+    <aura:attribute name="messageStack" type="List"  default="[]"/>
+    <aura:attribute name="messageObject" type="Map"   />
+
+    <!-- user List variable  -->
+    <aura:attribute name="userList" type="String[]" default="[ ]" />
+    
+    <!-- Boolean flag    -->
+    <aura:attribute name="isUserRegistered" type="boolean" default="false" />
+    
+    <aura:handler name="init" value="{!this}" action="{!c.onLoadActions}" />
+    
+    
+    
+    
+    
+    <!-- Chat Card / section where the chat happens-->
+    
+    <article class="slds-card">
+        <div class="slds-card__header slds-grid" >
+            <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                <div class="slds-media__figure">
+                    <span class="slds-icon_container slds-icon-standard-live_chat" title="live_chat">
+                        <lightning:icon iconName="standard:live_chat" alternativeText="live_chat" title="live_chat" />
+                        <span class="slds-assistive-text">Live chat</span>
+                    </span>
+                </div>
+                <div class="slds-media__body">
+                    <h2 class="slds-card__header-title">
+                        <span> Logged in as - {!v.username}  ( {!v.userEmail} )</span>
+                    </h2>
+                </div>
+                <div class="slds-no-flex">
+                    <!--button class="slds-button slds-button_neutral">New</button-->
+                </div>
+            </header>
+        </div>
+        <div class="slds-card__body slds-card__body_inner" style="height:500px;overflow-y:scroll;overflow-x:hidden;">
+            <br></br>     
+       
+                <ul >
+                    <aura:iteration items="{!v.messageStack}" var="item">
+                        <li><div class="slds-box">
+                        <div class="slds-publisher slds-is-active">
+                            <label for="comment-text-input2" class="slds-publisher__toggle-visibility slds-m-bottom_small">
+                                <h3 class="slds-tile__title slds-truncate" title="Salesforce UX">
+                                        <a href="javascript:void(0);">{!item.senderName} [ {!item.senderEmail} ]</a>
+                                    </h3> <b>says : </b></label>
+                            <div class="demo-only" style="width:30rem">
+                                <article class="slds-tile">
+                                    <div class="slds-tile__detail">
+                                         {!item.senderMessage}
+                                    </div>
+                                </article>
+                            </div>
+                        </div>
+</div>
+                     
+                        <br></br>
+                        </li>
+                    </aura:iteration>
+            </ul>
+        </div>
+        <footer class="slds-card__footer">
+            <div class="slds-grid slds-wrap">
+                
+                <div class="slds-col slds-size_10-of-12">
+                    <span>   <lightning:textarea name="messageIP" label="Add your message here!" value="{!v.message}" disabled="{!(!v.isUserRegistered)}"/></span>
+                </div>
+                <div class="slds-col slds-size_2-of-12" style="text-align: center;padding: 30px 0;">
+                    <span>    <lightning:button label="Send" iconName="utility:send" iconPosition="left"  variant="brand" disabled="{!(!v.isUserRegistered)}" onclick="{!c.sendMessage}"/>
+                    </span>
+                </div>
+                
+            </div>
+        </footer>
+    </article>
+    
+    
+    
+    
+</aura:component>

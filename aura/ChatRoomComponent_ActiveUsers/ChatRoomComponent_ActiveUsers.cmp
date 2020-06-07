@@ -1,0 +1,92 @@
+<aura:component 
+                controller="ChatRoomController" 
+                implements="force:hasRecordId,force:hasSObjectName,flexipage:availableForRecordHome,flexipage:availableForAllPageTypes" >
+    <!-- EMP API  -->
+    <lightning:empApi aura:id="empApi_Logger" />
+    <lightning:empApi aura:id="empApi_Logout" />
+
+    <!-- Holds the streaming event subscription -->
+    <aura:attribute name="subscription" type="Map" />
+    <aura:attribute name="subscriptionLogout" type="Map" />
+
+    
+    <aura:attribute name="platformEvent" type="String" default="/event/Logger__e" />
+    <aura:registerEvent name="UnsubscribeMessengerEvent" type="c:UnsubscribeMessengerEvent"/>
+    <aura:registerEvent name="UserLoggedInEvent" type="c:UserLoggedInEvent"/>
+
+    
+    <!-- Component Events -->
+    <aura:registerEvent name="UserLoginEvt" type="c:UserLogin" />
+    <aura:handler
+                  name="UserLoginEvt"
+                  event="c:UserLogin"
+                  action="{!c.updateUsersLoggedInListEvt}"
+                  />
+    
+    <aura:attribute name="username" type="String" />
+    <aura:attribute name="currentUserEmail" type="String" />
+
+    <!-- user List variable  -->
+    <aura:attribute name="userList" type="List" default="[ ]" />
+    
+    <!-- Boolean flag to open / close the modal   -->
+    <aura:attribute name="isDisabled" type="boolean" default="false" />
+    
+    <aura:handler name="init" value="{!this}" action="{!c.onLoadActions}" />
+    
+    <article class="slds-card">
+        <div class="slds-card__header slds-grid">
+            <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                <div class="slds-media__figure">
+                    <span class="slds-icon_container slds-icon-action-user" title="User">
+                              <lightning:icon iconName="action:user" alternativeText="User" title="User" size="small" />
+                        <span class="slds-assistive-text">{!v.username}</span>
+                    </span>
+                </div>
+                <div class="slds-media__body">
+                    <h2 class="slds-card__header-title">
+                            <span>{!v.username}</span>
+                    </h2>
+                </div>
+                <div class="slds-no-flex">
+                    <lightning:buttonGroup>
+                        <lightning:button label="Go Online" onclick="{!c.subscribe}" disabled="{!v.isDisabled}" />
+                        <lightning:button label="Go Offline" onclick="{!c.unsubscribe}" disabled="{!(!v.isDisabled)}"/>
+                    </lightning:buttonGroup>
+                </div>
+            </header>
+        </div>
+        <br></br>
+      <div class="slds-text-heading_small slds-align_absolute-center" >
+           <div class="slds-box" >
+                <p>Active members in this chat room.</p>
+            </div>  </div>
+		<br></br>
+        <br></br>
+        <div class="slds-card__body slds-card__body_inner" >
+                 <aura:iteration items="{!v.userList}" var="item">
+                     <div class="demo-only" style="width:30rem">
+                         <article class="slds-tile slds-media">
+                             <div class="slds-media__figure">
+                                 <span class="slds-avatar slds-avatar_circle slds-avatar_medium">
+                                     <img alt="" src="{!item.dp}" title="{!item.name}" />
+                                 </span>
+                             </div>
+                             <div class="slds-media__body">
+                                 <h3 class="slds-tile__title slds-truncate" title="{!item}">
+                                     <a href="javascript:void(0);">{!item.name}</a>
+                                 </h3>	
+                                 
+                                 <div class="slds-tile__detail">
+                                     <dl class="slds-list_horizontal slds-wrap">
+                                         <dd class="slds-item_detail slds-truncate" title="Email :">{!item.email}</dd>
+                                     </dl>
+                                 </div>
+                             </div>
+                         </article>
+                     </div>
+                     <br></br>
+            </aura:iteration>
+         </div>
+    </article>
+</aura:component>

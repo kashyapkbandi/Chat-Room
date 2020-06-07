@@ -1,0 +1,7 @@
+<aura:event type="APPLICATION" description="This Event will help us set the Username on Chat section and to enable the text area field on the ChatRoomComponent_ChatSection" >
+
+    <aura:attribute name="userLoggedin" type="Boolean"/>
+    <aura:attribute name="userName" type="String"/>
+    <aura:attribute name="userEmail" type="String"/>
+
+</aura:event>
